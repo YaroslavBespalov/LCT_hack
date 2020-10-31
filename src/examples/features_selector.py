@@ -8,11 +8,12 @@ from sklearn.ensemble import ExtraTreesClassifier, RandomForestClassifier, Gradi
 from sklearn.datasets import load_iris
 from sklearn.feature_selection import SelectFromModel
 from sklearn.model_selection import cross_val_score
-from data.expert_algo import ExpertAlgo, mix_transform
+from data.expert_algo import ExpertAlgo
 from data.mask_component_features import ComponentFeaturesExtractor, intersect_metric, contour_min_distance_metric, \
     coordinates_metric
 import numpy as np
 
+from data.transform import mix_transform
 
 dataset = ExpertAlgo(transforms=mix_transform(256))
 
