@@ -80,7 +80,7 @@ def make_complete_train_set(permutation: np.ndarray = None):
 
 def select_features(X, y):
 
-    clf = ExtraTreesClassifier(n_estimators=50)
+    clf = ExtraTreesClassifier(n_estimators=100)
     clf = clf.fit(X, y)
 
     print(clf.feature_importances_)
@@ -107,7 +107,7 @@ for _ in range(10):
     X_fold, y_fold = [], []
     X_test, y_test = None, None
 
-    for k in range(2):
+    for k in range(3):
         Xk, yk = make_complete_train_set(permutation)
         # Xk, yk = X1[permutation], y1[permutation]
         Xk = selection_model.transform(Xk)
