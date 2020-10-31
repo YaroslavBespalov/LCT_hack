@@ -28,6 +28,7 @@ def make_train_set(sample_num: int):
 
     X = []
     y = []
+    NC = 9
 
     for i in range(dataset.__len__()):
         data_i = dataset[i]
@@ -36,12 +37,22 @@ def make_train_set(sample_num: int):
         iou = data_i[f"iou_{sample_num}"]
 
         xi = extractor.extract(sample, expert)
+        if xi is None:
+            xi = -np.ones(NC)
+        else:
+            NC = xi.shape[0]
+
         xi_inv = extractor.extract(expert, sample)
+
+        if xi_inv is None:
+            xi_inv = -np.ones(NC)
+
         yi = int(data_i[f"label_{sample_num}"].item())
-        if xi is not None and xi_inv is not None:
-            xi = np.concatenate((xi, iou, xi_inv))
-            X.append(xi.reshape(1, -1))
-            y.append(yi)
+
+        xi = np.concatenate((xi, iou, xi_inv))
+        X.append(xi.reshape(1, -1))
+        y.append(yi)
+
 
     return np.concatenate(X), np.array(y)
 
@@ -51,6 +62,10 @@ def make_complete_train_set(permutation: np.ndarray = None):
     X1,y1 = make_train_set(sample_num=1)
     X2,y2 = make_train_set(sample_num=2)
     X3,y3 = make_train_set(sample_num=3)
+
+    # X1u = np.concatenate((X1, X2, X3), axis=1)
+    # X2u = np.concatenate((X2, X1, X3), axis=1)
+    # X3u = np.concatenate((X3, X1, X2), axis=1)
 
     X = np.concatenate((X1, X2, X3))
     y = np.concatenate((y1, y2, y3))
