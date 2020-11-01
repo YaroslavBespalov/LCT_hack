@@ -49,9 +49,9 @@ class ExpertDataset(Dataset):
         ]
 
         self.transforms = None
-        if transforms == "simple":
+        if transforms == 'simple':
             self.transforms = simple_transform(256)
-        elif transforms == "mix":
+        elif transforms == 'mix':
             self.transforms = mix_transform(256)
 
         self.saved_images = {}
@@ -115,6 +115,7 @@ class ExpertDataset(Dataset):
         tot = ToTensor()
 
         return {
+            'key': tmp,
             'image': res_image,
             'Expert': tot(res_mask[0]),
             'sample_1': tot(res_mask[1]),
@@ -146,9 +147,9 @@ class ExpertDatasetTest(Dataset):
         self.test_keys = pd.read_csv(os.path.join(path, 'Dataset', 'TestPart.csv'), names=['Case'], skiprows=1)
 
         self.transforms = None
-        if transforms == "simple":
+        if transforms == 'simple':
             self.transforms = simple_transform(256)
-        elif transforms == "mix":
+        elif transforms == 'mix':
             self.transforms = mix_transform(256)
 
         self.saved_masks = dict()
@@ -208,6 +209,7 @@ class ExpertDatasetTest(Dataset):
         tot = ToTensor()
 
         return {
+            'key': tmp,
             'image': res_image,
             'Expert': tot(res_mask[0]),
             'sample_1': tot(res_mask[1]),
