@@ -1,16 +1,12 @@
 import os
-import random
 from typing import Dict
 
 import torch
-from torch import nn, Tensor
-from torch.utils.data import Dataset, DataLoader
+from torch import Tensor
+from torch.utils.data import Dataset
 import pandas as pd
 from torchvision.transforms import ToTensor
 
-from data.mask_component_features import coordinates_metric, ComponentFeaturesExtractor, contour_min_distance_metric, \
-    intersect_metric
-from data.path import Paths
 import numpy as np
 from PIL import Image
 

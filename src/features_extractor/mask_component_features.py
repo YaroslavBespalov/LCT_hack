@@ -1,5 +1,7 @@
 import itertools
 from typing import List, Callable, Tuple
+
+from scipy.spatial import distance
 from scipy.spatial.distance import cdist
 import torch
 from torch import nn, Tensor
@@ -12,7 +14,21 @@ def intersect_metric(component: np.ndarray, ref_mask: np.ndarray):
     norm = component.sum()
     return (component * ref_mask).sum() / norm, \
            norm / ref_mask.shape[-1]
-           # (component * (1.0 - ref_mask)).sum() / norm, \
+
+
+def intersect_nearest(component: np.ndarray, ref_mask: np.ndarray):
+    norm = component.sum()
+
+    label_mask, num_features = label(ref_mask, structure=generate_binary_structure(2, 2))
+
+    res = []
+
+    for k in range(1, num_features + 1):
+        mask_k = np.zeros_like(ref_mask, dtype=np.float32)
+        mask_k[label_mask == k] = 1.0
+        res.append((component * ref_mask).sum() / norm)
+
+    return [max(res)] if len(res) > 0 else [0]
 
 
 def get_contours(mask: np.ndarray, min_len: int = 0):
