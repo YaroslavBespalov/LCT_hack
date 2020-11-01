@@ -7,7 +7,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 from data.expert_algo import ExpertAlgoTest, ExpertAlgo
 from data.transform import mix_transform, simple_transform
-from examples.features_selector import make_complete_train_set, select_features, make_test_set
+from examples.train import make_complete_train_set, select_features, make_test_set
 
 
 def colorize(img, color):

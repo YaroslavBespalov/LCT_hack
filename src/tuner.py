@@ -42,7 +42,7 @@ class GoldTuner:
         rand_direction = rand_direction / rand_direction_norm
         self.a = self.coefs
         self.b = self.proector(self.a + self.radius * rand_direction)
-        print(f"Choose direction from {self.a} to {self.b}")
+        print(f"Choose direction")
         self.update_coords()
 
     def get_coef(self):
@@ -55,11 +55,11 @@ class GoldTuner:
         if not self.active:
             return None
 
-        # if self.repeat_coefs:
-        #     print("repeat with stable coefs")
-        #     self.repeat_coefs = False
-        #     self.direction()
-        #     return None
+        if self.repeat_coefs:
+            print("repeat with stable coefs")
+            self.repeat_coefs = False
+            self.direction()
+            return None
 
         self.y["y" + self.queue[0][0]] = y
         self.queue.pop(0)
@@ -74,9 +74,9 @@ class GoldTuner:
                     self.best_ab = (self.a, self.b)
                     self.direction_score = score
 
-                self.direction()
-                # self.repeat_coefs = True
-                # return None
+                # self.direction()
+                self.repeat_coefs = True
+                return None
 
             elif self.directions_tested >= 5:
                 print(f"Take best from 5 direction {self.a} to {self.b}")
@@ -109,14 +109,14 @@ class GoldTuner:
             self.x2 = self.b - 0.382 * (self.b - self.a)
             self.queue.append(("2", self.x2))
             self.y["y1"] = self.y["y2"]
-            print("new a: ", self.a)
+            print("new a")
         else:
             self.b = self.x2
             self.x2 = self.x1
             self.x1 = self.a + 0.382 * (self.b - self.a)
             self.queue.append(("1", self.x1))
             self.y["y2"] = self.y["y1"]
-            print("new b: ", self.b)
+            print("new b")
 
     def stop_rule(self):
         if (self.b - self.a).abs().max() < self.rule_eps:
@@ -136,9 +136,6 @@ class GoldTuner:
     #         res = res + l * coef[i].detach()
     #
     #     return res
-
-
-
 
 
 
