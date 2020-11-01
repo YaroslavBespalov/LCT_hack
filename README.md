@@ -18,6 +18,11 @@ data/
 ```
 
 
+## Ответы
+
+https://github.com/YaroslavBespalov/LCT_hack/blob/main/data/SecretPart_predicts.csv
+
+
 ## Этапы решения
 
 #### Сегментация легких на снимках.
