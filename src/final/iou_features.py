@@ -168,10 +168,20 @@ def is_score_five(expert_mask, sample_mask, lungs_labeled_mask):
     n_exp = len(np.unique(skimage.measure.label(expert_mask))) - 1
     n_sam = len(np.unique(skimage.measure.label(sample_mask))) - 1
 
-    if n_exp == 1 and n_sam == 1 and get_iou(expert_mask, sample_mask) > 0.3:
+    if n_exp == 1 and n_sam == 1 and get_iou(expert_mask, sample_mask) >= 0.3:
         return True
 
     if n_exp == 2 and n_sam == 2 and np.mean(get_instance_iou(expert_mask, sample_mask, thresholds=[0.5])) == 1:
+        return True
+
+    return False
+
+
+def is_score_four(expert_mask, sample_mask, lungs_labeled_mask):
+    n_exp = len(np.unique(skimage.measure.label(expert_mask))) - 1
+    n_sam = len(np.unique(skimage.measure.label(sample_mask))) - 1
+
+    if n_exp == 1 and n_sam == 1 and 0.1 < get_iou(expert_mask, sample_mask) < 0.3:
         return True
 
     return False
@@ -181,8 +191,11 @@ def get_heuristic_score(expert_mask, sample_mask, lungs_labeled_mask):
     if is_score_one(expert_mask, sample_mask, lungs_labeled_mask):
         return 1.
 
-    if is_score_five(expert_mask, sample_mask, lungs_labeled_mask):
+    elif is_score_five(expert_mask, sample_mask, lungs_labeled_mask):
         return 5.
+    
+    elif is_score_four(expert_mask, sample_mask, lungs_labeled_mask):
+        return 4.
 
 
 def main():
