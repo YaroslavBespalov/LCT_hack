@@ -9,11 +9,12 @@ from sklearn.feature_selection import SelectFromModel
 from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import KFold, cross_val_predict
 
-from expert_dataset import ExpertDataset
+from expert_dataset import ExpertDataset, ExpertDatasetTest
 from mask_component_features import ComponentFeaturesExtractor, intersect_metric, contour_min_distance_metric
 
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+DATA_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'data')
 
 
 def make_train_set(dataset, sample_num: int):
@@ -28,8 +29,8 @@ def make_train_set(dataset, sample_num: int):
 
     for i in range(dataset.__len__()):
         data_i = dataset[i]
-        expert = data_i['Expert'][0].numpy()
-        sample = data_i[f'sample_{sample_num}'][0].numpy()
+        expert = data_i['Expert'][0].numpy().copy()
+        sample = data_i[f'sample_{sample_num}'][0].numpy().copy()
         iou = data_i[f'iou_{sample_num}']
 
         xi = extractor.extract(sample, expert)
@@ -68,7 +69,7 @@ def make_complete_train_set(dataset, permutation: np.ndarray = None):
 
 
 def select_features(X, y):
-    clf = ExtraTreesClassifier(n_estimators=1000)
+    clf = ExtraTreesClassifier(n_estimators=1000, random_state=117)
     clf = clf.fit(X, y)
 
     print('Feature count:', X.shape[1])
@@ -84,10 +85,11 @@ def select_features(X, y):
 
 
 def main():
-    dataset = ExpertDataset(path=os.path.join(SCRIPT_DIR, '..', '..', 'data'), enable_transforms=False)
+    dataset_train = ExpertDataset(path=DATA_DIR)
+    dataset_test = ExpertDatasetTest(path=DATA_DIR)
 
-    X, y = make_complete_train_set(dataset)
-    X_selected = select_features(X, y)
+    X_train, y_train = make_complete_train_set(dataset_train)
+    X_train_selected = select_features(X_train, y_train)
 
     reg = catboost.CatBoostRegressor(
         iterations=500,
@@ -97,13 +99,12 @@ def main():
         loss_function='MAE'
     )
 
-    cv = KFold(n_splits=10).split(X_selected, y)
-
-    cv_pred = cross_val_predict(reg, X_selected, y, cv=cv)
+    cv = KFold(n_splits=10).split(X_train_selected, y_train)
+    cv_pred = cross_val_predict(reg, X_train_selected, y_train, cv=cv)
 
     print('Cross validation predictions:')
     print(cv_pred)
-    print('MAE:', mean_absolute_error(y, np.round(cv_pred)))
+    print('MAE:', mean_absolute_error(y_train, np.round(cv_pred)))
 
 
 if __name__ == '__main__':
