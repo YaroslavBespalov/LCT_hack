@@ -1,8 +1,12 @@
 # Хакатон "Лидеры цифровой трансформации"
 # Трек: Разработка инструмента оценки качества работы алгоритмов медицинских изображений.
 
-## Short Summary
+## Предсказания теста
 
+https://github.com/YaroslavBespalov/LCT_hack/blob/main/data/SecretPart_predicts.csv
+
+
+## Short Summary
 
 Архитектура репозитория
 
@@ -16,11 +20,6 @@ data/
  src/
  notebooks/
 ```
-
-
-## Ответы
-
-https://github.com/YaroslavBespalov/LCT_hack/blob/main/data/SecretPart_predicts.csv
 
 
 ## Этапы решения
@@ -47,9 +46,9 @@ https://github.com/YaroslavBespalov/LCT_hack/blob/main/data/SecretPart_predicts.
   - Pseudo-labeling.
   - Model training on pseudo-labeling.
   - Постпроцессинг.
-  
+
 #### Запуск
 
 Для расчёта признаков, основанных на IoU, из директории `./src/final` запустите скрипт `iou_features.py`. Он построит файл `./data/iou_features_v01.csv`, содержащий признаки IoU, а также файл `./data/heuristic_scores.json`, содержащий эвристические предсказания качества разметок.
 
-Для обучения модели, оценки её качества с помощью кросс-валидации, а также получения предсказаний на тестовом датасете запустите из директории `./src/final` скрипт `learn_model.py`. 
+Для обучения модели, оценки её качества с помощью кросс-валидации, а также получения предсказаний на тестовом датасете запустите из директории `./src/final` скрипт `learn_model.py`.
