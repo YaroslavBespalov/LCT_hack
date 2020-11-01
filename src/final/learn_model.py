@@ -99,11 +99,28 @@ def postprocess(keys, pred):
     with open(os.path.join(DATA_DIR, 'heuristic_scores.json'), 'r') as f:
         heuristic_scores = json.load(f)
 
-    result = np.zeros_like(pred)
+    result = np.zeros_like(pred, dtype=int)
     for i, key in enumerate(keys):
-        result[i] = np.round(heuristic_scores.get(key, pred[i]))
+        result[i] = int(np.round(heuristic_scores.get(key, pred[i])))
 
     return result
+
+
+def write_result(keys, pred):
+    results = {}
+    for key, value in zip(keys, pred):
+        key, sample_num = key.rsplit('_', 1)
+        sample_num = int(sample_num[-1])
+
+        if key not in results:
+            results[key] = [1, 1, 1]
+        results[key][sample_num] = value
+
+    with open(os.path.join(DATA_DIR, 'SecretPart_predicts.csv'), 'w') as f:
+        print('Case,Sample 1,Sample 2,Sample 3', file=f)
+        for key in sorted(results.keys()):
+            values = results[key]
+            print(f'{key}.png,{values[0]},{values[1]},{values[2]}', file=f)
 
 
 def main():
@@ -144,7 +161,11 @@ def main():
     # Predict
     test_pred = reg.predict(X_test_selected)
     test_pred_postprocessed = postprocess(keys_test, test_pred)
+
+    print('Test predictions:')
     print(test_pred_postprocessed)
+
+    write_result(keys_test, test_pred_postprocessed)
 
 
 if __name__ == '__main__':
