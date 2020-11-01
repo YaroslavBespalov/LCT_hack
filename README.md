@@ -36,7 +36,8 @@ data/
 
 #### Тренировка модели и получение предсказания.
 
-  - Features mining & Feature Selection.
+  - Features mining
+  - Feature Selection.
   - Model training.
   - Pseudo-labeling.
   - Model training on pseudo-labeling.
